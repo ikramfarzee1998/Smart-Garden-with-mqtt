@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Garden Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.2/socket.io.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f2f5;
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 { margin-bottom: 1rem; }
+    .moist {
+      font-size: 2rem;
+      color: #0984e3;
+      margin-bottom: 2rem;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .controls form {
+      margin: 0;
+    }
+    button {
+      padding: 1.2rem 2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .pump-on { background: #00cec9; color: white; }
+    .pump-off { background: #0984e3; color: white; }
+    .auto-mode { background: #6c5ce7; color: white; }
+  </style>
+</head>
+<body>
+  <h1>🌿 Smart Garden Dashboard</h1>
+
+  <div class="moist">
+    Soil Moisture: <span id="status">{{ moisture_status }}</span>
+  </div>
+
+  <div class="controls">
+    <!-- Pump Controls -->
+    <form action="/pump/on" method="get">
+      <button class="pump-on">Pump ON (Manual)</button>
+    </form>
+    <form action="/pump/off" method="get">
+      <button class="pump-off">Pump OFF (Manual)</button>
+    </form>
+    <form action="/pump/auto" method="get">
+      <button class="auto-mode">Auto Mode</button>
+    </form>
+  </div>
+
+  <script>
+    const socket = io.connect(window.location.origin);
+
+    socket.on('moisture_update', function(data) {
+      document.getElementById('status').textContent = data.status;
+    });
+  </script>
+
+</body>
+</html>
